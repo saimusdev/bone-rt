@@ -30,17 +30,16 @@ else
 				$MAKE menuconfig
 
 				echo "building $kernel_version kernel image.."
-				$MAKE uImage dtbs LOADADDR=0x80008000
+				$MAKE uImage dtbs
 
 				echo "building kernel modules.."
 				$MAKE modules
 				
 				echo "installing kernel and modules.."
-				mkdir -p ../modules
-				$MAKE INSTALL_MOD_PATH=../modules modules_install install
+				$MAKE INSTALL_MOD_PATH=$PWD/rootfs modules_install
 
-				#echo "building Beaglebone kernel image.."
-				#$MAKE uImage-dtb.am335x-bone
+				echo "building Beaglebone kernel image.."
+				$MAKE uImage-dtb.am335x-bone
 
 			fi
 			;;
@@ -63,29 +62,19 @@ else
 
 				# Enter Kernel sources dir
 				cd kernel
-				
-				echo "using beaglebone_defconfig.."
-				$MAKE beaglebone_defconfig
-				
-				#echo "now, tweak the kernel to your liking"
-				#$MAKE menuconfig
-
-				$MAKE dtbs
 
 				echo "building $kernel_version kernel image.."
-				#$MAKE uImage dtbs
-				$MAKE 
-				$MAKE dtbs
+				$MAKE uImage dtbs
 
 				echo "building kernel modules.."
 				$MAKE modules
 				
 				echo "installing kernel and modules.."
-				$MAKE INSTALL_MOD_PATH=../modules modules_install install
+				$MAKE INSTALL_MOD_PATH=$PWD/rootfs modules_install
 
-				#echo "building Beaglebone kernel image.."
-				#$MAKE uImage-dtb.am335x-bone
-	
+				echo "building Beaglebone kernel image.."
+				$MAKE uImage-dtb.am335x-bone
+
 			else
 				echo "run first: `basename $0` build"
 				echo "this builds all the necessary files, not just the ones modified"
