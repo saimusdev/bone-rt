@@ -17,39 +17,36 @@ else
 
 				# Linaro toolchain gcc prefix
 				export CC=/usr/bin/arm-linux-gnueabihf-
-				kernel_version="3.14.29-rt26"
-				MAKE="make ARCH=arm CROSS_COMPILE=${CC} -j${num_jobs}"
+				kernel_version="3.8.13-rt14"
+				make="make ARCH=arm CROSS_COMPILE=${CC} -j${num_jobs}"
 				
 				# Enter Kernel sources dir
 				cd kernel
 
 				echo "using beaglebone_defconfig..."
-				$MAKE beaglebone_defconfig
+				$make beaglebone_defconfig
 				
-				#echo "now, tweak the kernel to your liking"
-				$MAKE menuconfig
+				echo "now, tweak the kernel to your liking"
+				$make menuconfig
 
 				echo "building $kernel_version kernel image.."
-				$MAKE uImage dtbs
+				$make uImage dtbs
 
 				echo "building kernel modules.."
-				$MAKE modules
+				$make modules
 				
 				echo "installing kernel and modules.."
-				$MAKE INSTALL_MOD_PATH=$PWD/rootfs modules_install
+				$make INSTALL_MOD_PATH=$PWD/rootfs modules_install
 
 				echo "building Beaglebone kernel image.."
-				$MAKE uImage-dtb.am335x-bone
+				$make uImage-dtb.am335x-bone
 
 			fi
 			;;
 
 		rebuild)
-			diff -q kernel/.config kernel/arch/arm/configs/beaglebone_defconfig
+			diff -q 2>/dev/null kernel/.config kernel/arch/arm/configs/beaglebone_defconfig
 			if [ $? -eq 0 ]; then
-				# Enter Kernel sources dir
-				cd kernel
-				
 				# number of machine processors x2 (for better performance during kernel build)
 				num_proc=`sudo cat /proc/cpuinfo | grep processor | wc -l`
 				num_jobs=$(( $num_proc * 2 ))
@@ -57,23 +54,23 @@ else
 
 				# Linaro toolchain gcc prefix
 				export CC=/usr/bin/arm-linux-gnueabihf-
-				kernel_version="3.14.29-rt26"
-				MAKE="make ARCH=arm CROSS_COMPILE=${CC}"
+				kernel_version="3.8.13-rt14"
+				make="make ARCH=arm CROSS_COMPILE=${CC}"
 
 				# Enter Kernel sources dir
 				cd kernel
 
 				echo "building $kernel_version kernel image.."
-				$MAKE uImage dtbs
+				$make uImage dtbs
 
 				echo "building kernel modules.."
-				$MAKE modules
+				$make modules
 				
 				echo "installing kernel and modules.."
-				$MAKE INSTALL_MOD_PATH=$PWD/rootfs modules_install
+				$make INSTALL_MOD_PATH=$PWD/rootfs modules_install
 
 				echo "building Beaglebone kernel image.."
-				$MAKE uImage-dtb.am335x-bone
+				$make uImage-dtb.am335x-bone
 
 			else
 				echo "run first: `basename $0` build"
@@ -87,11 +84,11 @@ else
 
 			# Linaro toolchain gcc prefix
 			export CC=/usr/bin/arm-linux-gnueabihf-
-			MAKE="make ARCH=arm CROSS_COMPILE=${CC}"
+			make="make ARCH=arm CROSS_COMPILE=${CC}"
 
-			$MAKE distclean
-			$MAKE clean
-			$MAKE mrproper
+			$make distclean
+			$make clean
+			$make mrproper
 			;;
 
 		format)
@@ -332,7 +329,7 @@ EOF
 			;;
 
 		*)
-			echo "usage: `basename $0` arg1"
+			echo "usage: `basename $0` command"
 			exit 1
 	esac
 fi
