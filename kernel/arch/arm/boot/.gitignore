@@ -3,4 +3,5 @@ zImage
 xipImage
 bootpImage
 uImage
+uImage-dtb.am335x-bone
 *.dtb
