@@ -45,7 +45,7 @@ else
 			;;
 
 		rebuild)
-			diff -q configs/beaglebone kernel/arch/arm/configs/beaglebone_defconfig
+			diff -q kernel/.config kernel/arch/arm/configs/beaglebone_defconfig
 			if [ $? -eq 0 ]; then
 				# Enter Kernel sources dir
 				cd kernel
