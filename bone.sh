@@ -7,48 +7,43 @@ if [ $# -ne 1 ]; then
 else
 	case "$1" in
 		build)
-			if [ "$EUID" -ne 0 ]; then
-				echo "Please run as root"
-			else
-				# number of machine processors x2 (for better performance during kernel build)
-				num_proc=`sudo cat /proc/cpuinfo | grep processor | wc -l`
-				num_jobs=$(( $num_proc * 2 ))
-				echo "using all ${num_proc} available processors in the machine"	
+			# number of machine processors x2 (for better performance during kernel build)
+			num_proc=`cat /proc/cpuinfo | grep processor | wc -l`
+			num_jobs=$(( $num_proc * 2 ))
+			echo "using all ${num_proc} available processors in the machine"	
 
-				# Linaro toolchain gcc prefix
-				export CC=/usr/bin/arm-linux-gnueabihf-
-				kernel_version="3.8.13-rt14"
-				make="make ARCH=arm CROSS_COMPILE=${CC} -j${num_jobs}"
-				
-				# Enter Kernel sources dir
-				cd kernel
+			# Linaro toolchain gcc prefix
+			export CC=/usr/bin/arm-linux-gnueabihf-
+			kernel_version="3.8.13-rt14"
+			make="make ARCH=arm CROSS_COMPILE=${CC} -j${num_jobs}"
+			
+			# Enter Kernel sources dir
+			cd kernel
 
-				echo "using beaglebone_defconfig..."
-				$make beaglebone_defconfig
-				
-				echo "now, tweak the kernel to your liking"
-				$make menuconfig
+			echo "using beaglebone_defconfig..."
+			$make beaglebone_defconfig
+			
+			echo "now, tweak the kernel to your liking"
+			$make menuconfig
 
-				echo "building $kernel_version kernel image.."
-				$make uImage dtbs
+			echo "building $kernel_version kernel image.."
+			$make uImage dtbs
 
-				echo "building kernel modules.."
-				$make modules
-				
-				echo "installing kernel and modules.."
-				$make INSTALL_MOD_PATH=$PWD/rootfs modules_install
+			echo "building kernel modules.."
+			$make modules
+			
+			echo "installing kernel and modules.."
+			$make INSTALL_MOD_PATH=$PWD/rootfs modules_install
 
-				echo "building Beaglebone kernel image.."
-				$make uImage-dtb.am335x-bone
-
-			fi
+			echo "building Beaglebone kernel image.."
+			$make uImage-dtb.am335x-bone
 			;;
 
 		rebuild)
 			diff -q 2>/dev/null kernel/.config kernel/arch/arm/configs/beaglebone_defconfig
 			if [ $? -eq 0 ]; then
 				# number of machine processors x2 (for better performance during kernel build)
-				num_proc=`sudo cat /proc/cpuinfo | grep processor | wc -l`
+				num_proc=`cat /proc/cpuinfo | grep processor | wc -l`
 				num_jobs=$(( $num_proc * 2 ))
 				echo "using all ${num_proc} available processors in the machine"	
 

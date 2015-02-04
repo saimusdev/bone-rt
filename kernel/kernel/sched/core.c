@@ -3122,6 +3122,8 @@ need_resched:
 	rq = cpu_rq(cpu);
 	rcu_note_context_switch(cpu);
 	prev = rq->curr;
+	printk(KERN_INFO
+		"Task #%d preempted!\n", prev->pid); 
 
 	schedule_debug(prev);
 
