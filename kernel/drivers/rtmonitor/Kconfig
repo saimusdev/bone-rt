@@ -1,0 +1,17 @@
+#
+# RT Monitor configuration
+#
+
+config RT_MONITOR
+	tristate "RT Monitor"
+	default n
+	help
+	  This option enables Real Time monitoring of the high 
+	  priority SCHED_FIFO or SCHED_RR classes of processes.
+
+	  You can say Y, and the device will be compiled into the
+	  kernel, or say M and the driver will be built as a module
+	  named rt_monitor.ko
+
+	  If unsure, say N.
+

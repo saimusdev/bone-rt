@@ -73,6 +73,7 @@
 #include <linux/init_task.h>
 #include <linux/binfmts.h>
 #include <linux/context_tracking.h>
+#include <linux/rt_monitor.h>
 
 #include <asm/switch_to.h>
 #include <asm/tlb.h>
@@ -85,6 +86,7 @@
 #include "sched.h"
 #include "../workqueue_sched.h"
 #include "../smpboot.h"
+
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/sched.h>
@@ -3122,8 +3124,10 @@ need_resched:
 	rq = cpu_rq(cpu);
 	rcu_note_context_switch(cpu);
 	prev = rq->curr;
-	printk(KERN_INFO
-		"Task #%d preempted!\n", prev->pid); 
+
+	if(rt_monitor_enabled()) {
+		printk(KERN_INFO "Task #%d preempted!\n", prev->pid); 
+	}
 
 	schedule_debug(prev);
 
